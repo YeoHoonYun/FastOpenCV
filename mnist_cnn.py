@@ -7,36 +7,27 @@ tf.logging.set_verbosity(tf.logging.ERROR)
 
 mnist = input_data.read_data_sets('./MNIST_data/', one_hot=True)
 
-#
-# hyper parameters
-#
 learning_rate = 0.001
 training_epochs = 20
 batch_size = 100
 
-#
-# Model configuration
-#
-X = tf.placeholder(tf.float32, [None, 28, 28, 1], name='data')
+X = tf.placeholder(tf.float32,[None, 28, 28, 1], name = 'data')
 Y = tf.placeholder(tf.float32, [None, 10])
 
-conv1 = tf.layers.conv2d(X, 10, [3, 3], padding='same', activation=tf.nn.relu)
-pool1 = tf.layers.max_pooling2d(conv1, [2, 2], strides=2, padding='same')
+conv1 = tf.layers.conv2d(X, 10, [3,3], padding='same', activation=tf.nn.relu)
+pool1 = tf.layers.max_pooling2d(conv1, [2,2], strides=2, padding='same')
 
 conv2 = tf.layers.conv2d(pool1, 20, [3, 3], padding='same', activation=tf.nn.relu)
-pool2 = tf.layers.max_pooling2d(conv2, [2, 2], strides=2, padding='same')
+pool2 = tf.layers.max_pooling2d(conv2, [2,2], strides=2, padding='same')
 
 fc1 = tf.contrib.layers.flatten(pool2)
-fc2 = tf.layers.dense(fc1, 200, activation=tf.nn.relu)
+fc2 = tf.layers.dense(fc1, 300, activation=tf.nn.relu)
 logits = tf.layers.dense(fc2, 10, activation=None)
 output = tf.nn.softmax(logits, name='prob')
 
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=Y, logits=logits))
 optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
 
-#
-# Training
-#
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 total_batch = int(mnist.train.num_examples / batch_size)
@@ -68,3 +59,4 @@ with gfile.FastGFile('./mnist_cnn.pb', 'wb') as f:
     f.write(output_graph_def.SerializeToString())
 
 print('mnist_cnn.pb file is created successfully!!')
+
