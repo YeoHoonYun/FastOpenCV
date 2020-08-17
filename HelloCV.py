@@ -2,7 +2,7 @@ import cv2
 import sys
 print('Hello, OpenCV', cv2.__version__)
 
-img = cv2.imread('cat.bmp')
+img = cv2.imread('cat.bmp', cv2.IMREAD_GRAYSCALE)
 
 if img is None:
     print("Image load failed!")
